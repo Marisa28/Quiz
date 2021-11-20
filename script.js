@@ -1,112 +1,114 @@
-(function(){
-	function buildQuiz(){
-	  // variable to store the HTML output
-	  const output = [];
-  
-	  // for each question...
-	  myQuestions.forEach(
-		(currentQuestion, questionNumber) => {
-  
-		  // variable to store the list of possible answers
-		  const answers = [];
-  
-		  // and for each available answer...
-		  for(letter in currentQuestion.answers){
-  
-			// ...add an HTML radio button
-			answers.push(
-			  `<label>
-				<input type="radio" name="question${questionNumber}" value="${letter}">
-				${letter} :
-				${currentQuestion.answers[letter]}
-			  </label>`
-			);
-		  }
-  
-		  // add this question and its answers to the output
-		  output.push(
-			`<div class="question"> ${currentQuestion.question} </div>
-			<div class="answers"> ${answers.join('')} </div>`
-		  );
-		}
-	  );
-  
-	  // finally combine our output list into one string of HTML and put it on the page
-	  quizContainer.innerHTML = output.join('');
-	}
-  
-	function showResults(){
-  
-	  // gather answer containers from our quiz
-	  const answerContainers = quizContainer.querySelectorAll('.answers');
-  
-	  // keep track of user's answers
-	  let numCorrect = 0;
-  
-	  // for each question...
-	  myQuestions.forEach( (currentQuestion, questionNumber) => {
-  
-		// find selected answer
-		const answerContainer = answerContainers[questionNumber];
-		const selector = `input[name=question${questionNumber}]:checked`;
-		const userAnswer = (answerContainer.querySelector(selector) || {}).value;
-  
-		// if answer is correct
-		if(userAnswer === currentQuestion.correctAnswer){
-		  // add to the number of correct answers
-		  numCorrect++;
-  
-		  // color the answers green
-		  answerContainers[questionNumber].style.color = 'lightgreen';
-		}
-		// if answer is wrong or blank
-		else{
-		  // color the answers red
-		  answerContainers[questionNumber].style.color = 'red';
-		}
-	  });
-  
-	  // show number of correct answers out of total
-	  resultsContainer.innerHTML = `${numCorrect} out of ${myQuestions.length}`;
-	}
-  
-	const quizContainer = document.getElementById('quiz');
-	const resultsContainer = document.getElementById('results');
-	const submitButton = document.getElementById('submit');
-	const myQuestions = [
-	  {
-		question: "Who invented JavaScript?",
-		answers: {
-		  a: "Douglas Crockford",
-		  b: "Sheryl Sandberg",
-		  c: "Brendan Eich"
-		},
-		correctAnswer: "c"
-	  },
-	  {
-		question: "Which one of these is a JavaScript package manager?",
-		answers: {
-		  a: "Node.js",
-		  b: "TypeScript",
-		  c: "npm"
-		},
-		correctAnswer: "c"
-	  },
-	  {
-		question: "Which tool can you use to ensure code quality?",
-		answers: {
-		  a: "Angular",
-		  b: "jQuery",
-		  c: "RequireJS",
-		  d: "ESLint"
-		},
-		correctAnswer: "d"
-	  }
-	];
-  
-	// Kick things off
-	buildQuiz();
-  
-	// Event listeners
-	submitButton.addEventListener('click', showResults);
-  })();
+const myQuestions = [
+  {
+    question: "Who invented JavaScript?",
+    answers: [
+      "Douglas Crockford",
+      "Sheryl Sandberg",
+      "Brendan Eich"
+    ],
+    correctAnswer: "Brendan Eich"
+  },
+  {
+    question: "Which one of these is a JavaScript package manager?",
+    answers: [
+      "Node.js",
+      "TypeScript",
+      "npm"
+    ],
+    correctAnswer: "npm"
+  },
+  {
+    question: "Which tool can you use to ensure code quality?",
+    answers: [
+      "Angular",
+      "jQuery",
+      "RequireJS",
+      "ESLint"
+    ],
+    correctAnswer: "ESLint"
+  }
+];
+let index = 0;
+let time = 200;
+let timerId;
+let startbuttonEl = document.getElementById("startbutton");
+let timeEl = document.getElementById("time");
+let startDivEl = document.getElementById("startdiv");
+let questionsDivEl = document.getElementById("questionsdiv")
+let currentquestionEl = document.getElementById("currentquestion")
+let answerdiv = document.getElementById("choicesdiv")
+
+function handleTick() {
+  time--;
+  timeEl.textContent = time
+  if (time <= 0) {
+    endgame()
+  }
+}
+function beginTheQuiz() {
+  startDivEl.setAttribute("class", "hidden");
+
+  questionsDivEl.removeAttribute("class")
+
+  timerId = setInterval(handleTick, 1000);
+  timeEl.innerText = time
+  displayquestion(index)
+}
+
+startbuttonEl.onclick = beginTheQuiz;
+
+function displayquestion(questionindex) {
+  var question = myQuestions[questionindex]
+  console.log(question.question)
+  currentquestionEl.innerText = (question.question)
+  console.log(question.answers)
+  answerdiv.innerHTML = ""
+  for (var i = 0; i < question.answers.length; i++) {
+    var answerbttn = document.createElement("button");
+    answerbttn.setAttribute("value", question.answers[i]
+    )
+    answerbttn.textContent = question.answers[i]
+    answerbttn.onclick = answerclick
+    answerdiv.appendChild(answerbttn)
+  }
+
+}
+function answerclick() {
+  // compare value of button user to correct answer of question object 
+  if (this.value === myQuestions[index].correctAnswer) {
+    console.log("correct")
+  } else {
+    console.log("wrong")
+    //  if question doesnt match we want to deduct time 
+    time -= 15
+    if (time < 0) {
+      time = 0
+
+    }
+  }
+
+
+  // move to move next question by incrementing index 
+  index++
+
+  // check to see if at end of question array if are end the game if not render the next question
+  if (index === myQuestions.length) {
+    endgame()
+  } else {
+    displayquestion(index)
+  }
+
+}
+function endgame() {
+  // stop timer 
+  clearInterval(timerId);
+  // show end screene 
+  var endscreen = document.getElementById("endgame")
+  endscreen.removeAttribute("class")
+  // show final score
+
+  // hide question div   
+ 
+  questionsDivEl.setAttribute("class", "hidden")
+}
+

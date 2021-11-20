@@ -1,5 +1,45 @@
-<div id="quiz"></div>
-<button id="submit">Submit Quiz</button>
-<div id="results"></div>
-<link rel="stylesheet" href="style.css" />
-<script src="script.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body>
+    <!-- the highscores div positioned at top left -->
+
+    <div id=highscores>
+        <a href="HighScore.html" target="_blank" rel="noopener noreferrer">High Score</a>
+    </div>
+
+    <div id=time>
+        <p> time: Quiz not started</p>
+    </div>
+    <div class="outerdiv">
+        <div id="startdiv" class="startdiv">
+            <h1>
+                Marisa's Coding Quiz
+            </h1>
+            <p> </p>
+            <button id="startbutton">
+                Start Quiz Now
+            </button>
+        </div>
+        <div id="questionsdiv" class="hidden">
+            <h2 id="currentquestion"> </h2>
+            <div id="choicesdiv" class="choicesdiv"> </div>
+        </div>
+
+    </div>
+    <div class="hidden" id="endgame">
+      <h2> Game Over </h2>  
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
